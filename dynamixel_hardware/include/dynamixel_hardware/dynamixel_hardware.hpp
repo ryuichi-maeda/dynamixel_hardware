@@ -101,6 +101,10 @@ private:
   
   // For gripper
   std::vector<int> gripper_indicies = {4};
+  // For the details of the following value, please refer to:
+  // https://github.com/ROBOTIS-GIT/turtlebot3_manipulation/blob/15e567f7af75aea892edea93bfcf69144d8dc67a/turtlebot3_manipulation_hardware/src/opencr.cpp#L456
+  // https://github.com/ROBOTIS-GIT/turtlebot3_manipulation/blob/15e567f7af75aea892edea93bfcf69144d8dc67a/turtlebot3_manipulation_hardware/src/opencr.cpp#L353
+  // https://github.com/ROBOTIS-GIT/turtlebot3_manipulation/blob/15e567f7af75aea892edea93bfcf69144d8dc67a/turtlebot3_manipulation_hardware/include/turtlebot3_manipulation_hardware/opencr_definitions.hpp#L93
   const float RAD_TO_METER = -0.015;
 };
 }  // namespace dynamixel_hardware
