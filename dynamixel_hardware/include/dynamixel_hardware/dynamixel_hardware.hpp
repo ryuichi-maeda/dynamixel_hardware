@@ -98,6 +98,10 @@ private:
   bool torque_enabled_{false};
   ControlMode control_mode_{ControlMode::Position};
   bool use_dummy_{false};
+  
+  // For gripper
+  std::vector<int> gripper_indicies = {4};
+  const float RAD_TO_METER = -0.015;
 };
 }  // namespace dynamixel_hardware
 

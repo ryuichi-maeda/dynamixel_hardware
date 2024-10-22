@@ -262,7 +262,14 @@ return_type DynamixelHardware::read()
   }
 
   for (uint i = 0; i < ids.size(); i++) {
-    joints_[i].state.position = dynamixel_workbench_.convertValue2Radian(ids[i], positions[i]);
+    auto it = std::find(gripper_indicies.begin(), gripper_indicies.end(), i);
+    if (it != gripper_indicies.end()) {
+      // convert radian to meter
+      double meter = dynamixel_workbench_.convertValue2Radian(ids[i], positions[i]) * RAD_TO_METER;
+      joints_[i].state.position = meter;
+    } else {
+      joints_[i].state.position = dynamixel_workbench_.convertValue2Radian(ids[i], positions[i]);
+    }
     joints_[i].state.velocity = dynamixel_workbench_.convertValue2Velocity(ids[i], velocities[i]);
     joints_[i].state.effort = dynamixel_workbench_.convertValue2Current(currents[i]);
   }
@@ -309,8 +316,15 @@ return_type DynamixelHardware::write()
   // Position control
   set_control_mode(ControlMode::Position);
   for (uint i = 0; i < ids.size(); i++) {
-    commands[i] = dynamixel_workbench_.convertRadian2Value(
-      ids[i], static_cast<float>(joints_[i].command.position));
+    auto it = std::find(gripper_indicies.begin(), gripper_indicies.end(), i);
+    if (it != gripper_indicies.end()) {
+      // convert meter to radian
+      double radian = static_cast<float>(joints_[i].command.position) / RAD_TO_METER;
+      commands[i] = dynamixel_workbench_.convertRadian2Value(ids[i], radian);
+    } else {
+      commands[i] = dynamixel_workbench_.convertRadian2Value(
+        ids[i], static_cast<float>(joints_[i].command.position));
+    }
   }
   if (!dynamixel_workbench_.syncWrite(
         kGoalPositionIndex, ids.data(), ids.size(), commands.data(), 1, &log)) {
